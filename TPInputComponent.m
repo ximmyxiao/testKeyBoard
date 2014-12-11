@@ -39,6 +39,9 @@
     [self.faceButton addTarget:self action:@selector(faceButtonAction) forControlEvents:UIControlEventTouchUpInside];
     [self.headView addSubview:self.faceButton];
     
+    self.QQFaceView = [[TPQQFaceBoardView alloc] initWithDelegate:self];
+    [self addSubview:self.QQFaceView];
+    
     [self constructAllConstraints];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillChangeFrame:) name:UIKeyboardWillChangeFrameNotification object:nil];
@@ -91,7 +94,7 @@
 
 - (void)constructAllConstraints
 {
-    NSDictionary *vs = NSDictionaryOfVariableBindings(_headView,_inputTextView,_faceButton);
+    NSDictionary *vs = NSDictionaryOfVariableBindings(_headView,_inputTextView,_faceButton,_QQFaceView);
     [self addConstraints:
      [NSLayoutConstraint
       constraintsWithVisualFormat:@"H:|[_headView]|"
@@ -99,7 +102,12 @@
     
     [self addConstraints:
      [NSLayoutConstraint
-      constraintsWithVisualFormat:@"V:|[_headView]"
+      constraintsWithVisualFormat:@"V:|[_headView]-0-[_QQFaceView(160)]"
+      options:0 metrics:nil views:vs]];
+    
+    [self addConstraints:
+     [NSLayoutConstraint
+      constraintsWithVisualFormat:@"H:|[_QQFaceView]|"
       options:0 metrics:nil views:vs]];
     
     self.totalHeightConstraint = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.headView attribute:NSLayoutAttributeHeight multiplier:1 constant:self.faceBoardHeight];
@@ -164,11 +172,17 @@
     NSString* text = textView.text;
     
     CGRect orgRect = textView.frame;//获取原始UITextView的frame
-    
-    CGSize  size = [text sizeWithFont:textView.font constrainedToSize:CGSizeMake(orgRect.size.width, 2000) lineBreakMode:NSLineBreakByWordWrapping];
+    CGFloat pad = textView.textContainer.lineFragmentPadding;
+    CGSize  size = [text boundingRectWithSize:CGSizeMake(orgRect.size.width - pad*2, 2000)  options:NSStringDrawingUsesLineFragmentOrigin attributes:nil context:nil].size;
 //    orgRect.size.height=size.height+10;//获取自适应文本内容高度
     self.textViewHeightConstraint.constant = size.height+10;
     [self.headView layoutIfNeeded];
+}
+
+- (void)didSelectQQFaceView:(NSString *)faceContent
+{
+    self.inputTextView.text = [NSString stringWithFormat:@"%@%@",self.inputTextView.text,faceContent];
+    [self textViewDidChange:self.inputTextView];
 }
 
 @end

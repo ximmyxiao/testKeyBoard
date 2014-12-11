@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TPQQFaceBoardView.h"
 
 @protocol TPInputComponentDelegate <NSObject>
 - (void)didSelectFaceBoard;
@@ -14,7 +15,7 @@
 @end
 
 
-@interface TPInputComponent : UIView<UITextViewDelegate>
+@interface TPInputComponent : UIView<UITextViewDelegate,QQFaceViewDelegate>
 @property(nonatomic,strong) UIView* headView;
 @property(nonatomic,strong) UITextView* inputTextView;
 @property(nonatomic,strong) UIButton* faceButton;
@@ -23,4 +24,6 @@
 @property(nonatomic,assign) CGFloat faceBoardHeight;
 @property(nonatomic,strong) NSLayoutConstraint* totalHeightConstraint;
 @property(nonatomic,strong) NSLayoutConstraint* textViewHeightConstraint;
+@property(nonatomic,strong) NSLayoutConstraint* QQFaceYOriginConstraint;
+@property(nonatomic,strong) TPQQFaceBoardView* QQFaceView;
 @end

@@ -8,6 +8,8 @@
 
 #import "ViewController.h"
 #import "TPInputComponent.h"
+#import "TPQQFaceBoardView.h"
+
 @interface ViewController ()
 @property(nonatomic,strong) IBOutlet TPInputComponent* inputComponent;
 @end
@@ -18,6 +20,12 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     self.inputComponent.bottomConstraint = self.inputBottomConstrain;
+    TPQQFaceBoardView* QQFaceView = [TPQQFaceBoardView new];
+    [self.view addSubview:QQFaceView];
+    
+    UIImageView* imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Expression_1"]];
+    imageView.center = CGPointMake(160, 200);
+    [self.view addSubview:imageView];
 }
 
 - (void)viewDidAppear:(BOOL)animated
